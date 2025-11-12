@@ -1,9 +1,6 @@
 import { useMemo } from "react";
-import View360, {
-  EquirectProjection,
-  Projection
-} from "@egjs/react-view360";
-import "@egjs/react-view360/css/view360.min.css";
+import View360, { EquirectProjection, Projection } from "@egjs/react-view360";
+// import "@egjs/react-view360/css/view360.min.css"; // removed
 
 type VirtualTourViewerProps = {
   title?: string;
