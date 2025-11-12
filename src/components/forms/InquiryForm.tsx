@@ -2,14 +2,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+// ✅ Validation schema
 const inquirySchema = z.object({
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Enter a valid email"),
   phone: z.string().min(6, "Phone number is required"),
-  propertyType: z.enum(["Plot", "House", "Property"]).default("Property"),
-  message: z.string().min(10, "Tell us about your requirements")
+  propertyType: z.enum(["Plot", "House", "Property"]),
+  message: z.string().min(10, "Tell us about your requirements"),
 });
 
+// ✅ Type inference from schema
 export type InquiryFormValues = z.infer<typeof inquirySchema>;
 
 type InquiryFormProps = {
@@ -17,16 +19,17 @@ type InquiryFormProps = {
   isSubmitting?: boolean;
 };
 
+// ✅ Form component
 export const InquiryForm = ({ onSubmit, isSubmitting }: InquiryFormProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<InquiryFormValues>({
     resolver: zodResolver(inquirySchema),
     defaultValues: {
-      propertyType: "Property"
-    }
+      propertyType: "Property",
+    },
   });
 
   return (
@@ -35,13 +38,13 @@ export const InquiryForm = ({ onSubmit, isSubmitting }: InquiryFormProps) => {
       onSubmit={handleSubmit(onSubmit)}
       noValidate
     >
-      <h3 className="text-xl font-semibold text-slate-900">
-        Book a Site Visit
-      </h3>
+      <h3 className="text-xl font-semibold text-slate-900">Book a Site Visit</h3>
       <p className="text-sm text-slate-500">
         Share your details and our team will reach out to schedule a site visit
         or virtual tour.
       </p>
+
+      {/* --- Name & Email --- */}
       <div className="grid gap-4 md:grid-cols-2">
         <div>
           <label className="text-sm font-medium text-slate-700">Full Name</label>
@@ -54,6 +57,7 @@ export const InquiryForm = ({ onSubmit, isSubmitting }: InquiryFormProps) => {
             <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>
           )}
         </div>
+
         <div>
           <label className="text-sm font-medium text-slate-700">Email</label>
           <input
@@ -66,6 +70,8 @@ export const InquiryForm = ({ onSubmit, isSubmitting }: InquiryFormProps) => {
           )}
         </div>
       </div>
+
+      {/* --- Phone & Property Type --- */}
       <div className="grid gap-4 md:grid-cols-2">
         <div>
           <label className="text-sm font-medium text-slate-700">Phone</label>
@@ -78,6 +84,7 @@ export const InquiryForm = ({ onSubmit, isSubmitting }: InquiryFormProps) => {
             <p className="mt-1 text-xs text-red-600">{errors.phone.message}</p>
           )}
         </div>
+
         <div>
           <label className="text-sm font-medium text-slate-700">
             Interested In
@@ -92,6 +99,8 @@ export const InquiryForm = ({ onSubmit, isSubmitting }: InquiryFormProps) => {
           </select>
         </div>
       </div>
+
+      {/* --- Message --- */}
       <div>
         <label className="text-sm font-medium text-slate-700">
           Tell us more
@@ -106,6 +115,8 @@ export const InquiryForm = ({ onSubmit, isSubmitting }: InquiryFormProps) => {
           <p className="mt-1 text-xs text-red-600">{errors.message.message}</p>
         )}
       </div>
+
+      {/* --- Submit --- */}
       <button
         type="submit"
         disabled={isSubmitting}
@@ -116,4 +127,3 @@ export const InquiryForm = ({ onSubmit, isSubmitting }: InquiryFormProps) => {
     </form>
   );
 };
-
