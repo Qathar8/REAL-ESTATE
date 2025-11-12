@@ -4,20 +4,22 @@ import { z } from "zod";
 
 import type { Client, Property, SiteVisit } from "@/types";
 
+// ✅ Zod validation schema
 const siteVisitSchema = z.object({
   client_id: z.string().min(1, "Select a client"),
   property_id: z.string().min(1, "Select a property"),
   scheduled_date: z.string().min(1, "Choose a date and time"),
   status: z.enum(["upcoming", "completed", "cancelled"]).default("upcoming"),
-  notes: z.string().optional()
+  notes: z.string().optional(),
 });
 
+// ✅ Type inferred from schema
 export type SiteVisitFormValues = z.infer<typeof siteVisitSchema>;
 
 type SiteVisitFormProps = {
   clients: Client[];
   properties: Property[];
-  defaultValues?: Partial<SiteVisit>;
+  defaultValues?: Partial<SiteVisitFormValues>; // ✅ was Partial<SiteVisit>
   onSubmit: (values: SiteVisitFormValues) => void | Promise<void>;
   isSubmitting?: boolean;
 };
@@ -27,23 +29,21 @@ export const SiteVisitForm = ({
   properties,
   defaultValues,
   onSubmit,
-  isSubmitting
+  isSubmitting,
 }: SiteVisitFormProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<SiteVisitFormValues>({
     resolver: zodResolver(siteVisitSchema),
-    defaultValues: defaultValues
-      ? {
-          client_id: defaultValues.client_id,
-          property_id: defaultValues.property_id,
-          scheduled_date: defaultValues.scheduled_date,
-          status: defaultValues.status,
-          notes: defaultValues.notes ?? ""
-        }
-      : undefined
+    defaultValues: defaultValues ?? {
+      client_id: "",
+      property_id: "",
+      scheduled_date: "",
+      status: "upcoming",
+      notes: "",
+    },
   });
 
   return (
@@ -52,6 +52,7 @@ export const SiteVisitForm = ({
       onSubmit={handleSubmit(onSubmit)}
       noValidate
     >
+      {/* --- Client & Property Selectors --- */}
       <div className="grid gap-4 md:grid-cols-2">
         <div>
           <label className="text-sm font-medium text-slate-700">
@@ -59,8 +60,8 @@ export const SiteVisitForm = ({
           </label>
           <select
             {...register("client_id")}
-            className="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
             defaultValue=""
+            className="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
           >
             <option value="" disabled>
               Choose a client
@@ -77,14 +78,15 @@ export const SiteVisitForm = ({
             </p>
           )}
         </div>
+
         <div>
           <label className="text-sm font-medium text-slate-700">
             Select Property
           </label>
           <select
             {...register("property_id")}
-            className="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
             defaultValue=""
+            className="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
           >
             <option value="" disabled>
               Choose a property
@@ -102,6 +104,8 @@ export const SiteVisitForm = ({
           )}
         </div>
       </div>
+
+      {/* --- Schedule & Status --- */}
       <div className="grid gap-4 md:grid-cols-2">
         <div>
           <label className="text-sm font-medium text-slate-700">
@@ -118,6 +122,7 @@ export const SiteVisitForm = ({
             </p>
           )}
         </div>
+
         <div>
           <label className="text-sm font-medium text-slate-700">
             Visit Status
@@ -132,6 +137,8 @@ export const SiteVisitForm = ({
           </select>
         </div>
       </div>
+
+      {/* --- Notes --- */}
       <div>
         <label className="text-sm font-medium text-slate-700">
           Additional Notes
@@ -142,6 +149,8 @@ export const SiteVisitForm = ({
           className="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
         />
       </div>
+
+      {/* --- Submit Button --- */}
       <button
         type="submit"
         disabled={isSubmitting}
@@ -152,4 +161,3 @@ export const SiteVisitForm = ({
     </form>
   );
 };
-
