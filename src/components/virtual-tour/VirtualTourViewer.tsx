@@ -1,5 +1,4 @@
-import { useMemo } from "react";
-import View360, { EquirectProjection, Projection } from "@egjs/react-view360";
+import { PanoViewer } from "@egjs/react-view360";
 // import "@egjs/react-view360/css/view360.min.css"; // removed
 
 type VirtualTourViewerProps = {
@@ -26,23 +25,12 @@ export const VirtualTourViewer = ({
 }: VirtualTourViewerProps) => {
   const assetExt = getExtension(assetUrl);
 
-  const projection = useMemo<Projection | null>(() => {
-    if (assetUrl && assetExt && imageExtensions.includes(assetExt)) {
-      return new EquirectProjection({
-        src: assetUrl,
-        widthSegments: 64,
-        heightSegments: 32
-      });
-    }
-    return null;
-  }, [assetExt, assetUrl]);
-
-  if (projection) {
+  if (assetUrl && assetExt && imageExtensions.includes(assetExt)) {
     return (
       <div className="flex flex-col gap-3">
         <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
-        <View360
-          projection={projection}
+        <PanoViewer
+          image={assetUrl}
           className="overflow-hidden rounded-3xl border border-slate-200 shadow-sm"
           style={{ height }}
         />

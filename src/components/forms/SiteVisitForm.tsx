@@ -9,7 +9,7 @@ const siteVisitSchema = z.object({
   client_id: z.string().min(1, "Select a client"),
   property_id: z.string().min(1, "Select a property"),
   scheduled_date: z.string().min(1, "Choose a date and time"),
-  status: z.enum(["upcoming", "completed", "cancelled"]).default("upcoming"),
+  status: z.enum(["upcoming", "completed", "cancelled"]),
   notes: z.string().optional(),
 });
 
