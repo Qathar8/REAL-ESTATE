@@ -16,14 +16,18 @@ export const Navbar = () => {
   return (
     <header className="sticky top-0 z-40 bg-white/90 shadow-sm backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 lg:px-0">
-        <Link
-          to="/"
-          className="flex items-center gap-2 text-xl font-semibold text-brand-700"
-        >
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white shadow-soft">
-            RE
-          </span>
-          Real Estate ERP
+       <Link
+  to="/"
+  className="flex items-center gap-2 text-xl font-semibold text-brand-700"
+>
+  <img
+    src="/hub.jpeg"
+    alt="Logo"
+    className="h-10 w-auto object-contain rounded-md"
+  />
+  <span>Real Estate </span>
+</Link>
+
         </Link>
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-700 md:flex">
           {navItems.map((item) => (
@@ -90,4 +94,5 @@ export const Navbar = () => {
     </header>
   );
 };
+
 
